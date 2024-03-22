@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "inventory",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 INVENTORY_MIN_COUNT = 0
 INVENTORY_MAX_COUNT = 10**6
+
+AUTH_USER_MODEL = "user.User"
