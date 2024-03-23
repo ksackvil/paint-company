@@ -1,5 +1,7 @@
 "use server";
 
+import { Inventory } from "@/lib/types";
+
 interface GetTokenResponse {
   access: string;
   refresh: string;
@@ -20,6 +22,10 @@ export async function getRefreshToken(
   return makeApiRequest("/token/refresh/", "POST", undefined, {
     refresh: token,
   });
+}
+
+export async function getInventory(token: string): Promise<Inventory[]> {
+  return makeApiRequest("/inventory/", "GET", token, undefined);
 }
 
 async function makeApiRequest<T>(

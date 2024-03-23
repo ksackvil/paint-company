@@ -1,3 +1,12 @@
+"use client";
+
+import PaintInventory from "@/components/paint-inventory";
+import { useSession } from "next-auth/react";
+
 export default function Home() {
-  return <div>content</div>;
+  const { data: session, status } = useSession();
+
+  if (status === "authenticated") {
+    return <PaintInventory session={session} />;
+  }
 }

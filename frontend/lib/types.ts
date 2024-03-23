@@ -32,3 +32,16 @@ declare module "next-auth" {
     expires: number;
   }
 }
+
+export interface Inventory {
+  id: number;
+  count: number;
+  status: number;
+  name: string;
+}
+
+export enum InventoryStatus {
+  available = 0,
+  running_low,
+  out_of_stock,
+}
