@@ -19,10 +19,11 @@ def list_inventory(request) -> Response:
 @permission_classes([IsAuthenticated])
 def update_inventory_item(request, id) -> Response:
     item = get_object_or_404(Inventory, id=id)
+
     serializer = InventorySerializer(item, data=request.data, partial=True)
+    if not serializer.is_valid():
+        # request.data is invalid
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.save()
+    return Response(serializer.data)

@@ -5,7 +5,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "role"]
+        fields = ["id", "username", "role", "is_owner"]
 
     def update(self, instance, validated_data):
         # Only allow updating the 'role' field
