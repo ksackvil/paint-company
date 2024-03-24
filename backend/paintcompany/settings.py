@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "inventory",
-    "user",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -140,7 +140,7 @@ INVENTORY_MAX_COUNT = 10**6
 
 # Sets default user model to custom app
 
-AUTH_USER_MODEL = "user.User"
+AUTH_USER_MODEL = "users.User"
 
 # Settings for JWT
 

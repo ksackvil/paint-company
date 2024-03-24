@@ -25,8 +25,9 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     # For Django admin Panel
     path("admin/", admin.site.urls),
-    # Inventory API
+    # APIs
     path("api/inventory/", include("inventory.urls")),
+    path("api/users/", include("users.urls")),
     # JWT
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
