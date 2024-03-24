@@ -28,6 +28,14 @@ export async function getInventory(token: string): Promise<Inventory[]> {
   return makeApiRequest("/inventory/", "GET", token, undefined);
 }
 
+export async function updateInventory(
+  token: string,
+  id: number,
+  body: object
+): Promise<Inventory[]> {
+  return makeApiRequest(`/inventory/${id}/`, "PATCH", token, body);
+}
+
 async function makeApiRequest<T>(
   endpoint: string,
   method: string,

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Session } from "next-auth";
 import * as api from "@/lib/api";
 import { extractSessionToken } from "@/lib/utils";
-import { Inventory } from "@/lib/types";
+import { Inventory, InventoryStatus } from "@/lib/types";
 
 export default function useInventory(session: Session) {
   // Chats in ordered from most recent to oldest
@@ -32,11 +32,34 @@ export default function useInventory(session: Session) {
   async function fetchInventory() {
     try {
       const response = await api.getInventory(extractSessionToken(session));
-      console.log(response);
+      // console.log(response);
       setInventory(response);
     } catch (error) {
       console.error("Error fetching inventory:", error);
     }
   }
-  return { inventory };
+
+  async function updateInventory(
+    id: number,
+    newCount: number | undefined,
+    newStatus: InventoryStatus | undefined
+  ) {
+    if (newCount === undefined && newStatus === undefined) {
+      // No updates to be made
+      return;
+    }
+
+    // Build the request body
+    const body: Record<string, any> = {};
+    if (newCount !== undefined) {
+      body["count"] = newCount;
+    }
+    if (newStatus !== undefined) {
+      body["status"] = newStatus;
+    }
+
+    api.updateInventory(extractSessionToken(session), id, body);
+  }
+
+  return { inventory, updateInventory };
 }
