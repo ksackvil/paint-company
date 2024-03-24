@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Session } from "next-auth";
 import useInventory from "@/lib/hooks/use-inventory";
 import { Inventory, InventoryStatus } from "@/lib/types";
-import PaintInventoryModel from "./edit-inventory-model";
+import InventoryModelForm from "./inventory-model-form";
 
 interface InventoryListProps {
   session: Session;
@@ -102,7 +102,7 @@ export default function InventoryList({ session }: InventoryListProps) {
                     setIsEditing(true);
                   }}
                   key={index}
-                  className="rounded-lg px-4 py-2 border border-gray-300 flex flex-col relative"
+                  className="cursor-pointer hover:bg-gray-100 rounded-lg px-4 py-2 shadow-sm border border-gray-300 flex flex-col relative"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
@@ -139,14 +139,12 @@ export default function InventoryList({ session }: InventoryListProps) {
       </div>
       {/* Model for editing paints */}
       {selectedPaints.length > 0 && isEditing && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-gray-800 bg-opacity-50">
-          <PaintInventoryModel
-            selectedPaints={selectedPaints}
-            setSelectedPaints={setSelectedPaints}
-            setIsVisible={setIsEditing}
-            updateInventory={updateInventory}
-          />
-        </div>
+        <InventoryModelForm
+          selectedPaints={selectedPaints}
+          setSelectedPaints={setSelectedPaints}
+          setIsVisible={setIsEditing}
+          updateInventory={updateInventory}
+        />
       )}
     </div>
   );

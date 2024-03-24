@@ -1,11 +1,12 @@
 from rest_framework import permissions
+from .models import User
 
 
-class IsAuthenticatedOwner(permissions.BasePermission):
+class IsAuthenticatedAdmin(permissions.BasePermission):
     """
     Custom permission to only allow authenticated owners to access the view.
     """
 
-    def has_permission(self, request, view):
+    def has_permission(self, request, view) -> bool:
         user = request.user
-        return user.is_authenticated and user.is_owner
+        return user.is_authenticated and user.role == User.Roles.ADMIN

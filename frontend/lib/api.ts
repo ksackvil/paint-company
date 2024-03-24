@@ -1,27 +1,25 @@
 "use server";
 
-import { Inventory } from "@/lib/types";
+import { Inventory, Token, UserData } from "@/lib/types";
 
-interface GetTokenResponse {
-  access: string;
-  refresh: string;
-}
 export async function getToken(
   username: string,
   password: string
-): Promise<GetTokenResponse> {
+): Promise<Token> {
   return makeApiRequest("/token/", "POST", undefined, {
     username: username,
     password: password,
   });
 }
 
-export async function getRefreshToken(
-  token: string
-): Promise<GetTokenResponse> {
+export async function getRefreshToken(token: string): Promise<Token> {
   return makeApiRequest("/token/refresh/", "POST", undefined, {
     refresh: token,
   });
+}
+
+export async function getUserData(token: string): Promise<UserData> {
+  return makeApiRequest("/users/data/", "GET", token, undefined);
 }
 
 export async function getInventory(token: string): Promise<Inventory[]> {
@@ -32,8 +30,20 @@ export async function updateInventory(
   token: string,
   id: number,
   body: object
-): Promise<Inventory[]> {
+): Promise<Inventory> {
   return makeApiRequest(`/inventory/${id}/`, "PATCH", token, body);
+}
+
+export async function getUsers(token: string): Promise<UserData[]> {
+  return makeApiRequest("/users/", "GET", token, undefined);
+}
+
+export async function updateUser(
+  token: string,
+  id: number,
+  body: object
+): Promise<UserData> {
+  return makeApiRequest(`/users/${id}/update/`, "PATCH", token, body);
 }
 
 async function makeApiRequest<T>(

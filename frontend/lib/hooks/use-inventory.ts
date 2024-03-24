@@ -7,7 +7,6 @@ import { extractSessionToken } from "@/lib/utils";
 import { Inventory, InventoryStatus } from "@/lib/types";
 
 export default function useInventory(session: Session) {
-  // Chats in ordered from most recent to oldest
   const [inventory, setInventory] = useState<Inventory[]>([]);
 
   useEffect(() => {
@@ -15,8 +14,8 @@ export default function useInventory(session: Session) {
       // Initial fetch
       fetchInventory();
 
-      // Polling interval in milliseconds (e.g., every 5 seconds)
-      const pollingInterval = 1000;
+      // Polling interval in milliseconds
+      const pollingInterval = 5000;
 
       // Polling function
       const intervalId = setInterval(fetchInventory, pollingInterval);
@@ -32,7 +31,6 @@ export default function useInventory(session: Session) {
   async function fetchInventory() {
     try {
       const response = await api.getInventory(extractSessionToken(session));
-      // console.log(response);
       setInventory(response);
     } catch (error) {
       console.error("Error fetching inventory:", error);
@@ -41,24 +39,37 @@ export default function useInventory(session: Session) {
 
   async function updateInventory(
     id: number,
-    newCount: number | undefined,
-    newStatus: InventoryStatus | undefined
+    newCount: number,
+    newStatus: InventoryStatus | -1
   ) {
-    if (newCount === undefined && newStatus === undefined) {
+    if (newCount === -1 && newStatus === -1) {
       // No updates to be made
       return;
     }
 
     // Build the request body
     const body: Record<string, any> = {};
-    if (newCount !== undefined) {
+    if (newCount !== -1) {
       body["count"] = newCount;
     }
-    if (newStatus !== undefined) {
+    if (newStatus !== -1) {
       body["status"] = newStatus;
     }
 
-    api.updateInventory(extractSessionToken(session), id, body);
+    try {
+      const updatedItem = await api.updateInventory(
+        extractSessionToken(session),
+        id,
+        body
+      );
+      setInventory((prevInventory) =>
+        prevInventory.map((item) =>
+          item.id === updatedItem.id ? updatedItem : item
+        )
+      );
+    } catch (error) {
+      console.error("Error updating inventory:", error);
+    }
   }
 
   return { inventory, updateInventory };

@@ -1,4 +1,4 @@
-import { getRefreshToken, getToken } from "@/lib/api";
+import * as api from "@/lib/api";
 import NextAuth, { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -27,11 +27,12 @@ const handler = NextAuth({
       },
       async authorize(credentials, req) {
         try {
-          const response = await getToken(
+          const token = await api.getToken(
             credentials!.username,
             credentials!.password
           );
-          return { ...response, name: credentials!.username } as User;
+          const userData = await api.getUserData(token.access);
+          return { ...token, data: userData } as User;
         } catch (error) {
           // TODO: can we pass the error message to user?
           console.log(error);
@@ -48,10 +49,11 @@ const handler = NextAuth({
         token.access = user.access;
         token.refresh = user.refresh;
         token.expires = getCurrentEpochTime() + BACKEND_ACCESS_TOKEN_LIFETIME;
+        token.user = user.data;
       } else if (getCurrentEpochTime() > token.expires) {
         // Access token has expired, refresh it
         console.log("REFRESH EVENT");
-        const response = await getRefreshToken(token.refresh);
+        const response = await api.getRefreshToken(token.refresh);
         token.access = response.access;
         token.refresh = response.refresh;
         token.expires = getCurrentEpochTime() + BACKEND_ACCESS_TOKEN_LIFETIME;
@@ -62,6 +64,7 @@ const handler = NextAuth({
     async session({ session, token, user }) {
       session.access = token.access;
       session.refresh = token.refresh;
+      session.user = token.user;
       return session;
     },
   },

@@ -4,6 +4,7 @@ declare module "next-auth/jwt" {
     access: string;
     refresh: string;
     expires: number;
+    user: UserData;
   }
 }
 
@@ -12,23 +13,33 @@ declare module "next-auth" {
    * The shape of the user object returned in the OAuth providers' `profile` callback,
    * or the second parameter of the `session` callback, when using a database.
    */
-  interface User {
-    name: string;
-    access: string;
-    refresh: string;
+  interface User extends Token {
+    data: UserData;
   }
 
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    user: {
-      name: string;
-    };
+    user: UserData;
     access: string;
     refresh: string;
     expires: number;
   }
+}
+
+export interface Token {
+  access: string;
+  refresh: string;
+}
+
+export interface UserData {
+  id: number;
+  username: string;
+  role: number;
+  is_owner: boolean;
+  first_name: string;
+  last_name: string;
 }
 
 export interface Inventory {
@@ -42,4 +53,9 @@ export enum InventoryStatus {
   available = 0,
   running_low,
   out_of_stock,
+}
+
+export enum UserRoles {
+  painter = 0,
+  admin,
 }
