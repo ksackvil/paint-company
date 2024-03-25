@@ -35,4 +35,37 @@ jobs:
           HEROKU_FRONTEND_APP_NAME: ${{ secrets.HEROKU_FRONTEND_APP_NAME }}
         run: heroku git:remote --app $HEROKU_FRONTEND_APP_NAME
       - name: Push to Heroku
-        run: git push heroku main
+        run: git push heroku main -f
+
+  # backend-deploy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Install Node.js
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: "20.x"
+  #     - name: Navigate to frontend project
+  #       run: cd frontend
+  #     - name: Heroku login credentials
+  #       env:
+  #         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  #         HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+  #       run: |
+  #         cat > ~/.netrc <<EOF
+  #           machine api.heroku.com
+  #             login $HEROKU_EMAIL
+  #             password $HEROKU_API_KEY
+  #           machine git.heroku.com
+  #             login $HEROKU_EMAIL
+  #             password $HEROKU_API_KEY
+  #         EOF
+  #     - name: Add Heroku remote
+  #       env:
+  #         HEROKU_FRONTEND_APP_NAME: ${{ secrets.HEROKU_FRONTEND_APP_NAME }}
+  #       run: heroku git:remote --app $HEROKU_FRONTEND_APP_NAME
+  #     - name: Push to Heroku
+  #       run: git push heroku main -f
