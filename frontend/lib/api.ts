@@ -53,7 +53,6 @@ async function makeApiRequest<T>(
   body?: object
 ): Promise<T> {
   /* Wrapper for calling fetch on our API */
-  const apiBaseUrl = "http://localhost:8000/api";
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };
@@ -70,7 +69,10 @@ async function makeApiRequest<T>(
     config.body = JSON.stringify(body);
   }
 
-  const response = await fetch(`${apiBaseUrl}${endpoint}`, config);
+  const response = await fetch(
+    `${process.env.API_BASE_URL}${endpoint}`,
+    config
+  );
 
   if (!response.ok) {
     throw new Error(`Error: ${response.status} - ${response.statusText}`);

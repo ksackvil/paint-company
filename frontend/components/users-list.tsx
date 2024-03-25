@@ -32,7 +32,7 @@ export default function UsersList({ session }: UsersListProps) {
 
   return (
     <div>
-      <div className="flex flex-col items-center p-4 min-h-screen">
+      <div className="flex flex-col items-center p-4">
         <h1 className="text-2xl font-semibold mb-4">Users</h1>
         <div className="max-w-md w-full">
           {users.map((user) => (
