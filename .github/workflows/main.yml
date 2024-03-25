@@ -34,7 +34,7 @@ jobs:
         run: | 
           cd frontend
           heroku git:remote --app $HEROKU_FRONTEND_APP_NAME
-          run: git push heroku main -f
+          git push heroku main -f
 
   # backend-deploy:
   #   runs-on: ubuntu-latest
